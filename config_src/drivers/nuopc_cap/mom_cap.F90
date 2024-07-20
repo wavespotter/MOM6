@@ -141,6 +141,8 @@ character(len=128)   :: scalar_field_name = ''
 integer              :: scalar_field_count = 0
 integer              :: scalar_field_idx_grid_nx = 0
 integer              :: scalar_field_idx_grid_ny = 0
+! For debugging:
+logical              :: dodebug_Finalize_skip_oceanmodelend = .false. ! (Sofar added)
 character(len=*),parameter :: u_FILE_u = &
      __FILE__
 
@@ -388,6 +390,14 @@ subroutine InitializeP0(gcomp, importState, exportState, clock, rc)
   if (ChkErr(rc,__LINE__,u_FILE_u)) return
   if (isPresent .and. isSet) then
      if (trim(value) .eq. '.true.') restart_eor = .true.
+  end if
+
+  ! Sofar added: debugging option for Finalize step:
+  call NUOPC_CompAttributeGet(gcomp, name="dodebug_Finalize_skip_oceanmodelend", value=value, &
+                              isPresent=isPresent, isSet=isSet, rc=rc)
+  if (ChkErr(rc,__LINE__,u_FILE_u)) return
+  if (isPresent .and. isSet) then
+     if (trim(value) .eq. '.true.') dodebug_Finalize_skip_oceanmodelend = .true.
   end if
 
 end subroutine
@@ -2200,7 +2210,11 @@ subroutine ocean_model_finalize(gcomp, rc)
   if (write_restart)call ESMF_LogWrite("No Restart Alarm, writing restart at Finalize ", &
                          ESMF_LOGMSG_INFO)
 
-  call ocean_model_end(ocean_public, ocean_State, Time, write_restart=write_restart)
+  if (dodebug_Finalize_skip_oceanmodelend) then ! Sofar added
+      call ESMF_LogWrite(trim(subname)":: Skipping call ocean_model_end to test output segfault...", ESMF_LOGMSG_INFO)
+  else
+      call ocean_model_end(ocean_public, ocean_State, Time, write_restart=write_restart)
+  endif
 
   call io_infra_end()
   call MOM_infra_end()
