@@ -2197,35 +2197,35 @@ subroutine ocean_model_finalize(gcomp, rc)
   if(write_runtimelog) timefs = MPI_Wtime()
 
   if (dodebug_Finalize) then
-      call ESMF_LogWrite(trim(subname)":: ESMF_GridCompGetInternalState...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: ESMF_GridCompGetInternalState...", ESMF_LOGMSG_INFO)
   endif
   call ESMF_GridCompGetInternalState(gcomp, ocean_internalstate, rc)
   if (ChkErr(rc,__LINE__,u_FILE_u)) return
 
   if (dodebug_Finalize) then
-      call ESMF_LogWrite(trim(subname)":: ocean_public => ocean_internalstate%ptr%ocean_public_type_ptr...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: ocean_public => ocean_internalstate%ptr%ocean_public_type_ptr...", ESMF_LOGMSG_INFO)
   endif
   ocean_public => ocean_internalstate%ptr%ocean_public_type_ptr
 
   if (dodebug_Finalize) then
-      call ESMF_LogWrite(trim(subname)":: ocean_state  => ocean_internalstate%ptr%ocean_state_type_ptr...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: ocean_state  => ocean_internalstate%ptr%ocean_state_type_ptr...", ESMF_LOGMSG_INFO)
   endif
   ocean_state  => ocean_internalstate%ptr%ocean_state_type_ptr
 
   if (dodebug_Finalize) then
-      call ESMF_LogWrite(trim(subname)":: call NUOPC_ModelGet(gcomp, modelClock=clock, rc=rc)...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: call NUOPC_ModelGet(gcomp, modelClock=clock, rc=rc)...", ESMF_LOGMSG_INFO)
   endif
   call NUOPC_ModelGet(gcomp, modelClock=clock, rc=rc)
   if (ChkErr(rc,__LINE__,u_FILE_u)) return
 
   if (dodebug_Finalize) then
-      call ESMF_LogWrite(trim(subname)":: call ESMF_ClockGet(clock, currTime=currTime, rc=rc)...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: call ESMF_ClockGet(clock, currTime=currTime, rc=rc)...", ESMF_LOGMSG_INFO)
   endif
   call ESMF_ClockGet(clock, currTime=currTime, rc=rc)
   if (ChkErr(rc,__LINE__,u_FILE_u)) return
 
   if (dodebug_Finalize) then
-      call ESMF_LogWrite(trim(subname)":: Time = esmf2fms_time(currTime)...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: Time = esmf2fms_time(currTime)...", ESMF_LOGMSG_INFO)
   endif
   Time = esmf2fms_time(currTime)
 
@@ -2239,19 +2239,19 @@ subroutine ocean_model_finalize(gcomp, rc)
                          ESMF_LOGMSG_INFO)
 
   if (dodebug_Finalize_skip_oceanmodelend) then ! Sofar added
-      call ESMF_LogWrite(trim(subname)":: Skipping call ocean_model_end to test output segfault...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: Skipping call ocean_model_end to test output segfault...", ESMF_LOGMSG_INFO)
   else
-      call ESMF_LogWrite(trim(subname)":: call ocean_model_end(ocean_public, ocean_State, Time, write_restart=write_restart)...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: call ocean_model_end(ocean_public, ocean_State, Time, write_restart=write_restart)...", ESMF_LOGMSG_INFO)
       call ocean_model_end(ocean_public, ocean_State, Time, write_restart=write_restart)
   endif
 
   if (dodebug_Finalize) then
-      call ESMF_LogWrite(trim(subname)":: call io_infra_end()...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: call io_infra_end()...", ESMF_LOGMSG_INFO)
   endif
   call io_infra_end()
 
   if (dodebug_Finalize) then
-      call ESMF_LogWrite(trim(subname)":: call MOM_infra_end()...", ESMF_LOGMSG_INFO)
+      call ESMF_LogWrite(trim(subname)//":: call MOM_infra_end()...", ESMF_LOGMSG_INFO)
   endif
   call MOM_infra_end()
 
